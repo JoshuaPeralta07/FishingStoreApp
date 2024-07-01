@@ -1,0 +1,77 @@
+﻿@{
+    var category = Context.Request.Query["category"];
+    var rods = "text-primary";
+    var lines = "text-primary";
+    var lures = "text-primary";
+    var storage = "text-primary";
+    var all = "text-primary";
+
+    switch(category)
+    {
+        case "rods":
+            rods = "active text-white bg-primary";
+            break;
+        case "lines":
+            lines = "active text-white bg-primary";
+            break;
+        case "lures":
+            lures = "active text-white bg-primary";
+            break;
+        case "storage":
+            storage = "active text-white bg-primary";
+            break;
+        default:
+            all = "active text-white bg-primary";
+            break;
+    }
+}
+
+@model IEnumerable<Product>
+
+<div class="row pb-3">
+    <div class="justify-content-between pb-5 pt-2">
+        <span></span>
+        <ul class="list-group list-group-horizontal-sm">
+            <a style="text-decoration:none;" asp-controller="Home" asp-action="Products" asp-route-category="rods" >
+                <li class="list-group-item @rods" id="category">Fishing Rods</li>
+            </a>
+            <a style="text-decoration:none;" asp-controller="Home" asp-action="Products" asp-route-category="lines">
+            <li class="list-group-item @lines" id="category">Fishing Lines</li>
+            </a>
+            <a style="text-decoration:none;" asp-controller="Home" asp-action="Products" asp-route-category="lures">
+            <li class="list-group-item @lures" id="category">Lures</li>
+            </a>
+            <a style="text-decoration:none;" asp-controller="Home" asp-action="Products" asp-route-category="storage">
+            <li class="list-group-item @storage" id="category">Storage</li>
+            </a>
+            <a style="text-decoration:none;" asp-controller="Home" asp-action="Products" asp-route-category="all">
+            <li class="list-group-item @all" id="category">All</li>
+            </a>
+        </ul>
+    </div>
+    @foreach (var product in Model)
+    {
+        <div class="col-lg-3 col-sm-6">
+            <div class="row p-2">
+                <div class="col-12 p-1">
+                    <div class="card border-0 p-3 shadow border-5 rounded">
+                        <img src="@product.ImageUrl" class="card-img-top rounded" />
+                        <div class="card-body p-0">
+                            <div class="pl-1">
+                                <p class="card-title h5 text-dark opacity-75 text-uppercase text-center">@product.ProductName</p>
+                                <p class="card-title text-dark text-center">Price:<b>@product.Price.ToString("c")</b></p>
+                            </div>
+                        </div>
+                        <div>
+                            <a asp-action="Details" asp-route-productid="@product.ProductId" class="btn btn-info border-0 bg-gradient form-control" style="border-radius:5px">Details</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <script src="~/js/product.js"></script>
+}

@@ -20,3 +20,10 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.divider-text:before,
+.divider-text:after {
+    flex: 1;
+    margin: auto 0.25rem;
+    content: "";
+}

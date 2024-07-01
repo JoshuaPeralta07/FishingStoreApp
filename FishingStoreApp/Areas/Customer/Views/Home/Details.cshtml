@@ -1,0 +1,72 @@
+﻿@model ShoppingCart
+
+<form method="post">
+    <input hidden asp-for="ProductId"/>
+    <div class="card shadow border-0 mt-4 mb-4">
+        <div class="card-header bg-primary py-4">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h3 class="text-light text-uppercase">@Model.Product.ProductName</h3>
+                </div>
+            </div>
+        </div>
+        <div class="card-body">
+            <div class="py-3">
+                <div class="row">
+                    <div class="col-6 col-md-2 pb-1">
+                        <a asp-action="Products" class="btn btn-primary mb-5 fw-semibold btn-sm text-uppercase" style="border-radius:5px"><small>Back to Products</small></a>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-12 col-lg-3 offset-lg-1 text-center mb-3">
+                        <img src="@Model.Product.ImageUrl" width="100%" class="rounded" style="position:relative" />
+                    </div>
+                    <div class="col-12 col-lg-6 offset-lg-1">
+                        <div class="row ps-2">
+                            <h6 class="text-primary-emphasis">Product Code: @Model.Product.ProductCode</h6>
+                        </div>
+                        <div class="row ps-2">
+                            @if (Model.Product.Stocks != 0)
+                            {
+                                <h6 class="text-primary-emphasis">Availability: @TempData["stocks"]</h6>
+                            }
+                            else
+                            {
+                                <h6 class="text-danger">Availability: @TempData["stocks"]</h6>
+                            }
+                        </div>
+                        <div class="row ps-2">
+                            <h4 class="text-primary-emphasis">Price: @Model.Product.Price.ToString("c")</h4>
+                        </div>
+                        <div class="row ps-2 pl-2">
+                            <h6 class="text-primary-emphasis">Description:</h6>
+                            <p class="text-secondary-emphasis lh-sm">@Model.Product.Description</p>
+                        </div>
+                        <div class="row mb-3 pl-2">
+                            <div class="col-md-4">
+                                <div class="input-group mb-3">
+                                    <span class="input-group-text bg-primary text-white border-0 fw-semibold" style="border-top-left-radius:5px; border-bottom-left-radius:5px" id="inputGroup-sizing-default">Quantity</span>
+                                    <input type="number" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px" 
+                                    value="1" min="1" class="form-control text-center" aria-label="Quantity" 
+                                    aria-describedby="inputGroup-sizing-default" asp-for="Quantity"/>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-12 col-md-6 pb-1">
+                                @if(Model.Product.Stocks != 0)
+                                {
+                                    <button type="submit" class="btn btn-primary w-100 py-2 fw-semibold" style="border-radius:5px">Add to Cart</button>
+                                }
+                                else
+                                {
+                                    <button type="submit" disabled class="btn btn-primary w-100 py-2 fw-semibold" style="border-radius:5px">Add to Cart</button>
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
