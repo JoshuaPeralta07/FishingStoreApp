@@ -1,9 +1,11 @@
-﻿using FishingStoreApp.DataAccess.Repository.IRepository;
+﻿using FishingStoreApp.DataAccess.Migrations;
+using FishingStoreApp.DataAccess.Repository.IRepository;
 using FishingStoreApp.Models;
 using FishingStoreApp.Models.ViewModels;
 using FishingStoreApp.Utility;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Security.Claims;
 
 namespace FishingStoreApp.Areas.Customer.Controllers
@@ -94,14 +96,18 @@ namespace FishingStoreApp.Areas.Customer.Controllers
                 OrderHeader = new()
             };
 
-            ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
+            var paymentMethodList = new List<string> { "Cash On Delivery", "Credit/Debit Card" };
+            ShoppingCartVM.OrderHeader.PaymentMethodList = new SelectList(paymentMethodList);
 
+            ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
+            
             ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
 			ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
 			ShoppingCartVM.OrderHeader.Address = ShoppingCartVM.OrderHeader.ApplicationUser.Address;
 			ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City;
 			ShoppingCartVM.OrderHeader.State = ShoppingCartVM.OrderHeader.ApplicationUser.State;
 			ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.ApplicationUser.PostalCode;
+            
 
 
 			foreach (var cart in ShoppingCartVM.ShoppingCartList)

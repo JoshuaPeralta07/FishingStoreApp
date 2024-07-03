@@ -151,6 +151,13 @@
                                     <input asp-for="OrderHeader.PaymentStatus" type="text" readonly class="form-control" />
                                 </div>
                             </div>
+                            <div class="row my-1">
+                                <div class="col-3">Payment Method</div>
+                                <div class="col-9">
+                                    <input asp-for="OrderHeader.PaymentMethod" type="text" readonly class="form-control" />
+                                </div>
+                            </div>
+
                             <button type="submit" asp-action="UpdateOrderDetail" class="btn btn-warning form-control my-1">Update </button>
 
                         </div>

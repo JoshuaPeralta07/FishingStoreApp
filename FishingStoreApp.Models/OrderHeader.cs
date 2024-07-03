@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -42,5 +43,9 @@ namespace FishingStoreApp.Models
 		public string PostalCode { get; set; }
 		[Required]
 		public string PhoneNumber { get; set; }
+
+		public string PaymentMethod { get; set; }
+		[NotMapped]
+		public IEnumerable<SelectListItem> PaymentMethodList { get; set; }
 	}
 }
