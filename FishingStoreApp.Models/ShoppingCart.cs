@@ -23,5 +23,6 @@ namespace FishingStoreApp.Models
         [ForeignKey("ApplicationUserId")]
         [ValidateNever]
         public ApplicationUser ApplicationUser { get; set; }
+        
     }
 }

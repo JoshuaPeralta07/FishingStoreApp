@@ -5,6 +5,7 @@
 }
 @model ShoppingCartVM
 <form method="post">
+    <input hidden asp-for="@Model.Promotion.Id"/>
     <br />
     <div class="card shadow border-0">
         <div class="card-header bg-primary text-light ml-0 py-4">
@@ -72,6 +73,13 @@
                         </div>
                     }
 
+                   @*  <div class="col-md-10 offset-md-1 mt-2">
+                        <label asp-for="Promotion.Id" class="text-muted mx-1">Promo Code</label>
+                        <select asp-for="Promotion.Id" asp-items="@Model.PromotionList" class="form-control border-0">
+                            <option disabled selected>-Select Promo Code-</option>
+                        </select>
+                        <span asp-validation-for="Promotion.Id" class="text-danger"></span>
+                    </div> *@
 
                 </div>
             </div>
@@ -93,4 +101,5 @@
                 </div>
             </div>
         </div>
+     </div>
 </form>

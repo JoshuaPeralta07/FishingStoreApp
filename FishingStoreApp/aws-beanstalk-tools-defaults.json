@@ -1,0 +1,22 @@
+
+{
+    "region" : "us-east-1",
+    "configuration" : "Debug",
+    "framework"     : "net8.0",
+    "self-contained" : true,
+    "application"    : "FishingStoreApp",
+    "environment"    : "FishingStoreApp-dev",
+    "enable-xray"    : false,
+    "enhanced-health-type" : "basic",
+    "additional-options"   : "\"aws:autoscaling:launchconfiguration,SecurityGroups\"=\"sg-0cf617af318452fac,sg-0b4752ee66f2be013\";\"aws:ec2:vpc,Subnets\"=\"subnet-0deacf60a2de6f9af,subnet-0aa17fa85b6334368,subnet-07f6f4a827152d0c4,subnet-06afdb155762e70ac,subnet-0dc4396d0d1df827c,subnet-09456be757bdcc997\";\"aws:ec2:vpc,ELBSubnets\"=\"subnet-0deacf60a2de6f9af,subnet-0aa17fa85b6334368,subnet-07f6f4a827152d0c4,subnet-06afdb155762e70ac,subnet-0dc4396d0d1df827c,subnet-09456be757bdcc997\";\"aws:ec2:vpc,ELBScheme\"=\"public\"",
+    "solution-stack"       : "64bit Amazon Linux 2 v2.7.3 running .NET Core",
+    "environment-type"     : "LoadBalanced",
+    "loadbalancer-type"    : "application",
+    "cname"                : "fishingstoreapp",
+    "instance-type"        : "t2.micro",
+    "key-pair"             : "fsa-key-pair",
+    "health-check-url"     : "/",
+    "instance-profile"     : "aws-elasticbeanstalk-ec2-role",
+    "service-role"         : "aws-elasticbeanstalk-service-role",
+    "proxy-server"         : "nginx"
+}

@@ -62,6 +62,32 @@ namespace FishingStoreApp.Areas.Customer.Controllers
             return View(objProducts);
         }
 
+        public IActionResult ContactUs()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult ContactUs(ContactUs obj)
+        {
+            try
+            {
+                if (ModelState.IsValid)
+                {
+                    _unitOfWork.ContactUs.Add(obj);
+                    _unitOfWork.Save();
+                    TempData["success"] = "Thank you for contacting us!";
+                    return RedirectToAction("Index");
+                }
+            }
+            catch (Exception ex)
+            {
+                return View(ex);
+            }
+
+            return View();
+        }
+
         public IActionResult Details(int productId)
         {
             ShoppingCart cart = new ShoppingCart()
@@ -71,8 +97,7 @@ namespace FishingStoreApp.Areas.Customer.Controllers
                 ProductId = productId
             };
 
-            
-            if(cart.Product.Stocks != 0)
+            if (cart.Product.Stocks != 0)
             {
                 TempData["stocks"] = "In Stock";
             }

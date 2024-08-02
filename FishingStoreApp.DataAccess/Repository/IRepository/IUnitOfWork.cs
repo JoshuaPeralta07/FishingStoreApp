@@ -14,6 +14,8 @@ namespace FishingStoreApp.DataAccess.Repository.IRepository
         IApplicationUserRepository ApplicationUser { get; }
         IOrderDetailRepository OrderDetail { get; }
         IOrderHeaderRepository OrderHeader { get; }
+        IContactUsRepository ContactUs { get; }
+        IPromotionRepository Promotion { get; }
         void Save();
     }
 }

@@ -158,7 +158,14 @@
                                 </div>
                             </div>
 
-                            <button type="submit" asp-action="UpdateOrderDetail" class="btn btn-warning form-control my-1">Update </button>
+                            @if(Model.OrderHeader.OrderStatus != "Cancelled")
+                            {
+                                <button type="submit" asp-action="UpdateOrderDetail" class="btn btn-warning form-control my-1">Update </button>
+                            }
+                            else
+                            {
+                                <button type="submit" disabled asp-action="UpdateOrderDetail" class="btn btn-warning form-control my-1">Update </button>
+                            }
 
                         </div>
                         <div class="col-12 col-lg-5 offset-lg-1">
@@ -210,7 +217,14 @@
                             {
                                 <button type="submit" onclick="return validateInput()" asp-action="ShipOrder" class="btn btn-primary form-control my-1">Ship Order</button>
                             }
+                            @if(Model.OrderHeader.OrderStatus == "Cancelled")
+                            {
+                                
+                            }
+                            else
+                            {
                                 <button type="submit" asp-action="CancelOrder" class="btn btn-danger form-control my-1">Cancel Order</button>
+                            }
                         </div>
                     </div>
                 </div>

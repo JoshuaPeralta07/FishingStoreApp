@@ -26,6 +26,7 @@
                             <h6 class="text-primary-emphasis">Product Code: @Model.Product.ProductCode</h6>
                         </div>
                         <div class="row ps-2">
+                            <h6 class="text-primary-emphasis">Availability: @TempData["stocks"]</h6>
                             @if (Model.Product.Stocks != 0)
                             {
                                 <h6 class="text-primary-emphasis">Availability: @TempData["stocks"]</h6>
@@ -45,6 +46,10 @@
                         <div class="row mb-3 pl-2">
                             <div class="col-md-4">
                                 <div class="input-group mb-3">
+                                    <span class="input-group-text bg-primary text-white border-0 fw-semibold" style="border-top-left-radius:5px; border-bottom-left-radius:5px" id="inputGroup-sizing-default">Quantity</span>
+                                    <input type="number" style="border-top-right-radius: 5px; border-bottom-right-radius: 5px"
+                                           value="1" min="1" class="form-control text-center" aria-label="Quantity"
+                                           aria-describedby="inputGroup-sizing-default" asp-for="Quantity" />
                                     @if(Model.Product.Stocks != 0)
                                     {
                                         <span class="input-group-text bg-primary text-white border-0 fw-semibold" style="border-top-left-radius:5px; border-bottom-left-radius:5px" id="inputGroup-sizing-default">Quantity</span>

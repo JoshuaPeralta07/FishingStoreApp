@@ -76,7 +76,7 @@ namespace FishingStoreApp.Areas.Admin.Controllers
         [Authorize(Roles = SD.AdminRole)]
         public IActionResult ApproveOrder()
         {
-            _unitOfWork.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, "Approved");
+            _unitOfWork.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, SD.StatusApproved);
             _unitOfWork.Save();
             TempData["success"] = "Order has been approved.";
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
@@ -86,7 +86,7 @@ namespace FishingStoreApp.Areas.Admin.Controllers
         [Authorize(Roles = SD.AdminRole)]
         public IActionResult StartProcessing()
         {
-            _unitOfWork.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, "In Process");
+            _unitOfWork.OrderHeader.UpdateStatus(OrderVM.OrderHeader.Id, SD.StatusInProcess);
             _unitOfWork.Save();
             TempData["success"] = "Order has been processed.";
             return RedirectToAction(nameof(Details), new { orderId = OrderVM.OrderHeader.Id });
@@ -99,7 +99,7 @@ namespace FishingStoreApp.Areas.Admin.Controllers
             var orderHeader = _unitOfWork.OrderHeader.Get(u=>u.Id==OrderVM.OrderHeader.Id);
             orderHeader.TrackingNumber = OrderVM.OrderHeader.TrackingNumber;
             orderHeader.Carrier = OrderVM.OrderHeader.Carrier;
-            orderHeader.OrderStatus = "Shipped";
+            orderHeader.OrderStatus = SD.StatusShipped;
             orderHeader.OrderShipped = DateTime.Now;
 
             _unitOfWork.OrderHeader.Update(orderHeader);
@@ -114,7 +114,7 @@ namespace FishingStoreApp.Areas.Admin.Controllers
         {
             var orderHeader = _unitOfWork.OrderHeader.Get(u => u.Id == OrderVM.OrderHeader.Id);
 
-            _unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, "Cancelled");
+            _unitOfWork.OrderHeader.UpdateStatus(orderHeader.Id, SD.StatusCancelled);
             _unitOfWork.Save();
             TempData["success"] = "Order has been cancelled";
 

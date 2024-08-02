@@ -5,24 +5,23 @@
 namespace FishingStoreApp.DataAccess.Migrations
 {
     /// <inheritdoc />
-    public partial class addPaymentMethodToOrderHeader : Migration
+    public partial class addSessionIdToOrderHeader : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<string>(
-                name: "PaymentMethod",
+                name: "sessionId",
                 table: "OrderHeaders",
                 type: "nvarchar(max)",
-                nullable: false,
-                defaultValue: "");
+                nullable: true);
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "PaymentMethod",
+                name: "sessionId",
                 table: "OrderHeaders");
         }
     }

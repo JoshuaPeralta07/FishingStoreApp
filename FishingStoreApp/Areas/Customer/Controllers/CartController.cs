@@ -1,5 +1,4 @@
-﻿using FishingStoreApp.DataAccess.Migrations;
-using FishingStoreApp.DataAccess.Repository.IRepository;
+﻿using FishingStoreApp.DataAccess.Repository.IRepository;
 using FishingStoreApp.Models;
 using FishingStoreApp.Models.ViewModels;
 using FishingStoreApp.Utility;
@@ -24,19 +23,26 @@ namespace FishingStoreApp.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
-
-            ShoppingCartVM = new()
+            try
             {
-                ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includProps: "Product"),
-                OrderHeader = new()
-            };
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+                ShoppingCartVM = new()
+                {
+                    ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includProps: "Product"),
+                    OrderHeader = new()
+                };
 
 
-            foreach (var cart in ShoppingCartVM.ShoppingCartList)
+                foreach (var cart in ShoppingCartVM.ShoppingCartList)
+                {
+                    ShoppingCartVM.OrderHeader.OrderTotal += (cart.Product.Price * cart.Quantity);
+                }
+            }
+            catch(Exception ex)
             {
-                ShoppingCartVM.OrderHeader.OrderTotal += (cart.Product.Price * cart.Quantity);
+               
             }
 
             return View(ShoppingCartVM);
@@ -85,7 +91,7 @@ namespace FishingStoreApp.Areas.Customer.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        public IActionResult Summary()
+        public IActionResult Summary(int? id)
         {
             var claimsIdentity = (ClaimsIdentity)User.Identity;
             var userId = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier).Value;
@@ -93,30 +99,68 @@ namespace FishingStoreApp.Areas.Customer.Controllers
             ShoppingCartVM = new()
             {
                 ShoppingCartList = _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == userId, includProps: "Product"),
+                PromotionList = _unitOfWork.Promotion.GetAll().Select(u => new SelectListItem
+                {
+                    Text = u.PromoName,
+                    Value = u.Id.ToString(),
+                }),
+                Promotion = new(),
                 OrderHeader = new()
             };
 
             var paymentMethodList = new List<string> { "Cash On Delivery", "Credit/Debit Card" };
-            ShoppingCartVM.OrderHeader.PaymentMethodList = new SelectList(paymentMethodList);
 
-            ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
-            
-            ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
-			ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
-			ShoppingCartVM.OrderHeader.Address = ShoppingCartVM.OrderHeader.ApplicationUser.Address;
-			ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City;
-			ShoppingCartVM.OrderHeader.State = ShoppingCartVM.OrderHeader.ApplicationUser.State;
-			ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.ApplicationUser.PostalCode;
+            ShoppingCartVM.Promotion = _unitOfWork.Promotion.Get(u=>u.Id == id);
             
 
-
-			foreach (var cart in ShoppingCartVM.ShoppingCartList)
+           if(id == null || id == 0)
             {
-                ShoppingCartVM.OrderHeader.OrderTotal += (cart.Product.Price * cart.Quantity);
-            }
+				ShoppingCartVM.OrderHeader.PaymentMethodList = new SelectList(paymentMethodList);
+				ShoppingCartVM.OrderHeader.PromoList = ShoppingCartVM.PromotionList;
+				ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
+
+				ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
+				ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
+				ShoppingCartVM.OrderHeader.Address = ShoppingCartVM.OrderHeader.ApplicationUser.Address;
+				ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City;
+				ShoppingCartVM.OrderHeader.State = ShoppingCartVM.OrderHeader.ApplicationUser.State;
+				ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.ApplicationUser.PostalCode;
+
+				foreach (var cart in ShoppingCartVM.ShoppingCartList)
+				{
+					ShoppingCartVM.OrderHeader.OrderTotal += (cart.Product.Price * cart.Quantity);
+				}
+			}
+            else
+            {
+				ShoppingCartVM.OrderHeader.PaymentMethodList = new SelectList(paymentMethodList);
+				ShoppingCartVM.OrderHeader.PromoList = ShoppingCartVM.PromotionList;
+				ShoppingCartVM.OrderHeader.ApplicationUser = _unitOfWork.ApplicationUser.Get(u => u.Id == userId);
+
+				ShoppingCartVM.OrderHeader.Name = ShoppingCartVM.OrderHeader.ApplicationUser.Name;
+				ShoppingCartVM.OrderHeader.PhoneNumber = ShoppingCartVM.OrderHeader.ApplicationUser.PhoneNumber;
+				ShoppingCartVM.OrderHeader.Address = ShoppingCartVM.OrderHeader.ApplicationUser.Address;
+				ShoppingCartVM.OrderHeader.City = ShoppingCartVM.OrderHeader.ApplicationUser.City;
+				ShoppingCartVM.OrderHeader.State = ShoppingCartVM.OrderHeader.ApplicationUser.State;
+				ShoppingCartVM.OrderHeader.PostalCode = ShoppingCartVM.OrderHeader.ApplicationUser.PostalCode;
+
+				foreach (var cart in ShoppingCartVM.ShoppingCartList)
+				{
+					ShoppingCartVM.OrderHeader.OrderTotal += (cart.Product.Price * cart.Quantity);
+				}
+
+				var discount = ShoppingCartVM.OrderHeader.OrderTotal * (ShoppingCartVM.Promotion.Discount / 100);
+                ShoppingCartVM.OrderHeader.OrderTotal -= discount;
+			}
+            
+
+
+			
+
 
             return View(ShoppingCartVM);
         }
+
 
         [HttpPost]
         [ActionName("Summary")]
@@ -129,9 +173,10 @@ namespace FishingStoreApp.Areas.Customer.Controllers
 
             ShoppingCartVM.OrderHeader.OrderDate = DateTime.Now;
             ShoppingCartVM.OrderHeader.ApplicationUserId = userId;
-            ShoppingCartVM.OrderHeader.OrderStatus = "Pending";
-            ShoppingCartVM.OrderHeader.PaymentStatus = "Approved";
+            ShoppingCartVM.OrderHeader.OrderStatus = SD.StatusPending;
+            ShoppingCartVM.OrderHeader.PaymentStatus = SD.PaymentStatusApproved;
             ShoppingCartVM.OrderHeader.PaymentDate = DateTime.Now;
+            ShoppingCartVM.Promotion.Discount = 10.00;
 
 
 			foreach (var cart in ShoppingCartVM.ShoppingCartList)
@@ -140,7 +185,12 @@ namespace FishingStoreApp.Areas.Customer.Controllers
                 cart.Product.Stocks -= cart.Quantity;
 			}
 
-            _unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
+			var discount = ShoppingCartVM.OrderHeader.OrderTotal * (ShoppingCartVM.Promotion.Discount / 100);
+			ShoppingCartVM.OrderHeader.OrderTotal -= discount;
+
+
+
+			_unitOfWork.OrderHeader.Add(ShoppingCartVM.OrderHeader);
             _unitOfWork.Save();
 
             foreach(var cart in ShoppingCartVM.ShoppingCartList)

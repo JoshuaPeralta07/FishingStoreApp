@@ -1,0 +1,11 @@
+{
+  "dependencies": {
+    "mssql1": {
+      "serviceConnectorResourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Web/sites/FishingStoreApp20240712213505/providers/Microsoft.ServiceLinker/linkers/ConnectionStringsFishingStoreConnString_D69C2FFA89",
+      "secretStore": "AzureAppSettings",
+      "resourceId": "/subscriptions/[parameters('subscriptionId')]/resourcegroups/[parameters('resourceGroupName')]/providers/Microsoft.Sql/servers/fishingstoreappdbserver/databases/FishingStoreApp_db",
+      "type": "mssql.azure",
+      "connectionId": "ConnectionStrings:FishingStoreConnString"
+    }
+  }
+}

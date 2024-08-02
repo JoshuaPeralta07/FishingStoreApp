@@ -5,10 +5,10 @@
 }
 @model ShoppingCartVM
 <form method="post">
+	<input hidden asp-for="@Model.Promotion.Id"/>
 	<br />
 	<div class="container">
 		<div class="card shadow border-0">
-
 			<div class="card-header bg-secondary text-light ml-0 py-4">
 				<div class="row px-4">
 					<div class="col-6">
@@ -111,11 +111,25 @@
 									</li>
 								}
 
+									<li class="list-group-item d-flex bg-light">
+										
+										<label asp-for="Promotion.Id" class="text-muted mx-1">Promo Code</label>
+										<select asp-for="Promotion.Id" asp-items="@Model.OrderHeader.PromoList" class="form-control border-0">
+											<option disabled selected>-Select Promo Code-</option>
+										</select>
+										<span asp-validation-for="Promotion.Id" class="text-danger"></span>
+										<a asp-controller="Cart" asp-action="Summary" style="border-radius: 5px; margin-left:5px" asp-route-id="1" class="btn btn-primary form-control">Apply</a>
+									
+										
+									</li>
+								
 								<li class="list-group-item d-flex justify-content-between bg-light">
 									<small class="text-primary mx-1">Total (NZD)</small>
 									<strong class="text-primary">@Model.OrderHeader.OrderTotal.ToString("c")</strong>
 								</li>
 							</ul>
+
+							
 						</div>
 					</div>
 				</div>
