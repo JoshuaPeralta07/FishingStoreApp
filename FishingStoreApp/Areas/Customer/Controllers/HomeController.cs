@@ -25,13 +25,20 @@ namespace FishingStoreApp.Areas.Customer.Controllers
 
         public IActionResult Index()
         {
-            var claimsIdentity = (ClaimsIdentity)User.Identity;
-            var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
-
-            if(claim != null)
+            try
             {
-                HttpContext.Session.SetInt32(SD.SessionCart, 
-                    _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).Count());
+                var claimsIdentity = (ClaimsIdentity)User.Identity;
+                var claim = claimsIdentity.FindFirst(ClaimTypes.NameIdentifier);
+
+                if (claim != null)
+                {
+                    HttpContext.Session.SetInt32(SD.SessionCart,
+                        _unitOfWork.ShoppingCart.GetAll(u => u.ApplicationUserId == claim.Value).Count());
+                }
+            }
+            catch (Exception ex)
+            {
+                //throw exception
             }
 
             return View();
@@ -80,10 +87,15 @@ namespace FishingStoreApp.Areas.Customer.Controllers
                     return RedirectToAction("Index");
                 }
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                return View(ex);
+                //throw exception
+                throw new ArgumentException("Something wrong with the form.", ex);
             }
+            //catch (/*Argument2*/)
+            //{
+            //}
+            //catch(Exception ex) {}
 
             return View();
         }
